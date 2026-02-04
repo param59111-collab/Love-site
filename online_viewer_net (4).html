@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Spicy Journey ❤️</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background: radial-gradient(circle at center, #3d0016 0%, #000 100%); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex; justify-content: center; align-items: center; 
+            min-height: 100vh; overflow: hidden; color: #ff4081; 
+        }
+        /* Floating Hearts */
+        .heart { position: absolute; top: -10%; color: rgba(255, 23, 68, 0.5); font-size: 20px; animation: float 4s linear infinite; z-index: 1; pointer-events: none; }
+        @keyframes float { 0% { transform: translateY(110vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; } }
+        
+        .card { 
+            background: rgba(25, 0, 10, 0.95); 
+            padding: 30px; border-radius: 25px; 
+            border: 2px solid #ff1744; 
+            box-shadow: 0 0 50px rgba(255, 23, 68, 0.7); 
+            width: 90%; max-width: 400px; 
+            position: relative; z-index: 10; text-align: center; 
+            backdrop-filter: blur(10px);
+        }
+        h1 { font-size: 2rem; color: #ff1744; text-shadow: 0 0 15px #ff1744; margin-bottom: 15px; }
+        p { font-size: 1.1rem; color: #fce4ec; line-height: 1.5; margin-bottom: 15px; }
+        
+        .step { display: none; }
+        .step.active { display: block; animation: zoomIn 0.4s ease-out; }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+        textarea { 
+            width: 100%; height: 100px; 
+            background: rgba(255, 255, 255, 0.08); 
+            border: 1px solid #ff4081; border-radius: 15px; 
+            color: #fff; padding: 15px; margin: 15px 0; 
+            font-size: 1.1rem; outline: none; resize: none;
+        }
+        
+        .main-btn { 
+            background: linear-gradient(45deg, #d81b60, #ff1744); 
+            color: white; border: none; padding: 15px 35px; 
+            border-radius: 50px; font-size: 1.2rem; font-weight: bold; 
+            cursor: pointer; box-shadow: 0 5px 20px rgba(255, 23, 68, 0.6);
+            transition: 0.3s; width: 100%;
+        }
+        .main-btn:active { transform: scale(0.95); }
+
+        .final-list { text-align: left; margin: 20px 0; border-top: 2px solid #ff1744; padding-top: 15px; max-height: 300px; overflow-y: auto; }
+        .final-item { margin-bottom: 15px; padding: 10px; background: rgba(255, 23, 68, 0.1); border-radius: 10px; }
+        .q-text { color: #ff80ab; font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 5px; }
+        .a-text { color: #fff; font-size: 1.1rem; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div id="hearts-container"></div>
+
+    <div class="card">
+        <div class="step active" id="step0">
+            <h1>My Desire ❤️</h1>
+            <p>I want to go deep into your heart today... Will you let me in?</p>
+            <button class="main-btn" id="start-btn">Start the Journey 🔥</button>
+        </div>
+
+        <div class="step" id="step1">
+            <p>What was your first thought when you saw me? ❤️</p>
+            <textarea id="ans1" placeholder="Be honest..."></textarea>
+            <button class="main-btn btn-next" data-step="1">Submit & Next 💋</button>
+        </div>
+
+        <div class="step" id="step2">
+            <p>What is my favourite meal from your body? 😋🔥</p>
+            <textarea id="ans2" placeholder="Tell me exactly..."></textarea>
+            <button class="main-btn btn-next" data-step="2">Submit & Next 💋</button>
+        </div>
+
+        <div class="step" id="step3">
+            <p>Which naughty habit of mine drives you crazy? 😈</p>
+            <textarea id="ans3" placeholder="Don't be shy..."></textarea>
+            <button class="main-btn btn-next" data-step="3">Submit & Next 💋</button>
+        </div>
+
+        <div class="step" id="step4">
+            <p>Which little habit of mine makes your heart beat faster? 😌</p>
+            <textarea id="ans4" placeholder="A tiny detail..."></textarea>
+            <button class="main-btn btn-next" data-step="4">Submit & Next 💋</button>
+        </div>
+
+        <div class="step" id="step5">
+            <p>If we were alone in the dark, where would your hands go? ✨</p>
+            <textarea id="ans5" placeholder="Describe the feeling..."></textarea>
+            <button class="main-btn btn-next" data-step="5">Submit & Next 💋</button>
+        </div>
+
+        <div class="step" id="step6">
+            <p>Are you ready to be mine completely & forever? 💍</p>
+            <textarea id="ans6" placeholder="Your promise..."></textarea>
+            <button class="main-btn btn-next" data-step="6">Finish & Reveal ❤️</button>
+        </div>
+
+        <div class="step" id="step7">
+            <h1>I Choose You ❤️</h1>
+            <p style="font-size: 0.9rem;">Your words warmed my heart. Whatever you wrote—I’m already smiling.</p>
+            <div id="summary" class="final-list"></div>
+            <p style="color: #ff80ab; font-weight: bold; font-size: 1.1rem;">Happy Valentine’s Day 💖</p>
+            <p style="font-size: 0.8rem; margin-top: 10px;">📸 Take a screenshot & send it to me!</p>
+        </div>
+    </div>
+
+    <script>
+        // Heart Animation
+        setInterval(() => {
+            const h = document.createElement('div');
+            h.className = 'heart'; h.innerHTML = '❤️';
+            h.style.left = Math.random() * 100 + 'vw';
+            h.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            document.getElementById('hearts-container').appendChild(h);
+            setTimeout(() => h.remove(), 4000);
+        }, 400);
+
+        let data = [];
+        const questions = [
+            "", "1. First Thought:", "2. Favorite Meal:", 
+            "3. Naughty Habit:", "4. Heartbeat Habit:", 
+            "5. In The Dark:", "6. Forever Mine?"
+        ];
+
+        // Start Button
+        document.getElementById('start-btn').addEventListener('click', function() {
+            document.getElementById('step0').classList.remove('active');
+            document.getElementById('step1').classList.add('active');
+        });
+
+        // Next Buttons
+        document.querySelectorAll('.btn-next').forEach(button => {
+            button.addEventListener('click', function() {
+                const currentStepNum = parseInt(this.getAttribute('data-step'));
+                const val = document.getElementById('ans' + currentStepNum).value.trim();
+                
+                if(!val) {
+                    alert("Baby, please write something first! ❤️");
+                    return;
+                }
+
+                data.push({ q: questions[currentStepNum], a: val });
+
+                document.getElementById('step' + currentStepNum).classList.remove('active');
+                
+                if(currentStepNum < 6) {
+                    document.getElementById('step' + (currentStepNum + 1)).classList.add('active');
+                } else {
+                    showFinal();
+                }
+            });
+        });
+
+        function showFinal() {
+            const summaryDiv = document.getElementById('summary');
+            let html = "";
+            data.forEach(item => {
+                html += `<div class="final-item"><span class="q-text">${item.q}</span><span class="a-text">${item.a}</span></div>`;
+            });
+            summaryDiv.innerHTML = html;
+            document.getElementById('step7').classList.add('active');
+        }
+    </script>
+</body>
+</html>
